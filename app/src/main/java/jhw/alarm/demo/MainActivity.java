@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
                 calendar.set(Calendar.SECOND, 0);
-                AlarmItem alarmItem = new AlarmItem((int) (calendar.getTimeInMillis() / 1000), calendar.getTimeInMillis(), AlarmUtil.INTERVAL, true);
+                AlarmItem alarmItem = new AlarmItem((int) (calendar.getTimeInMillis() / 1000), calendar.getTimeInMillis(), AlarmUtil.MINUTE, true);
                 AlarmCompat.addAlarm(mActivity, alarmItem);
                 alarmRepository.saveAlarm(alarmItem);
                 getList();

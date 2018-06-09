@@ -13,10 +13,12 @@ public class AlarmRepeatReceiver extends BroadcastReceiver {
             if (requestCode != -1) {
                 long intervalMillis = intent.getLongExtra("intervalMillis", -1);
                 boolean repeat = intent.getBooleanExtra("repeat", false);
-                AlarmCompat.repeatAlarm(context, intervalMillis, repeat, PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT));
+                if (repeat) {
+                    AlarmCompat.repeatAlarm(context, intervalMillis, repeat, PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT));
+                }
                 // do something
-                Intent sendMsg =new Intent("jhw.alarm.action");
-                sendMsg.putExtra("aid",requestCode);
+                Intent sendMsg = new Intent("jhw.alarm.action");
+                sendMsg.putExtra("aid", requestCode);
                 context.sendBroadcast(sendMsg);
                 //AlarmNoticeUtil.showNotice(context, requestCode);
             }

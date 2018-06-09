@@ -23,23 +23,29 @@ public class AlarmCompat {
 
     public static void addAlarm(Context context, AlarmItem alarmItem) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Calendar firstAlarmDate = Calendar.getInstance();
-        firstAlarmDate.setTimeInMillis(alarmItem.date);
+        long triggerAtMillis = alarmItem.date;
 
-        Calendar alarmDate = Calendar.getInstance();
-        alarmDate.set(Calendar.HOUR_OF_DAY, firstAlarmDate.get(Calendar.HOUR_OF_DAY));
-        alarmDate.set(Calendar.MINUTE, firstAlarmDate.get(Calendar.MINUTE));
-        alarmDate.set(Calendar.SECOND, firstAlarmDate.get(Calendar.SECOND));
 
-        Calendar today = Calendar.getInstance();
-        if (alarmDate.before(today)) {
-            // 如果时间小于当前时间，加一天
-            alarmDate.add(Calendar.DATE, 1);
+        if (alarmItem.repeat) {
+            Calendar firstAlarmDate = Calendar.getInstance();
+            firstAlarmDate.setTimeInMillis(alarmItem.date);
+            Calendar alarmDate = Calendar.getInstance();
+            alarmDate.set(Calendar.HOUR_OF_DAY, firstAlarmDate.get(Calendar.HOUR_OF_DAY));
+            alarmDate.set(Calendar.MINUTE, firstAlarmDate.get(Calendar.MINUTE));
+            alarmDate.set(Calendar.SECOND, firstAlarmDate.get(Calendar.SECOND));
+
+            Calendar today = Calendar.getInstance();
+            if (alarmDate.before(today)) {
+                // 如果时间小于当前时间，加一天
+                alarmDate.add(Calendar.MILLISECOND, (int) alarmItem.interval);
+            }
+            triggerAtMillis = alarmDate.getTimeInMillis();
         }
+
         if (alarmManager != null) {
-            AlarmManagerCompat.setExact(alarmManager, AlarmManager.RTC_WAKEUP, alarmDate.getTimeInMillis(), getBroadcastPendingIntent(context, alarmItem.id, INTERVAL));
+            AlarmManagerCompat.setExact(alarmManager, AlarmManager.RTC_WAKEUP, triggerAtMillis, getBroadcastPendingIntent(context, alarmItem.id, alarmItem.interval));
         }
-        Log.d("jihongwen", "add Alarm time " + AlarmUtil.getDateFormat(alarmDate.getTimeInMillis()));
+        Log.d("jihongwen", "add Alarm time " + AlarmUtil.getDateFormat(triggerAtMillis));
     }
 
     public static void repeatAlarm(Context context, long intervalMillis, boolean repeat, PendingIntent pendingIntent) {
