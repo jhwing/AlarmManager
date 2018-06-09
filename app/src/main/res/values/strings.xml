@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">AlarmManagerDemo</string>
+    <string name="app_name">闹钟</string>
+    <string name="del">删除</string>
 </resources>

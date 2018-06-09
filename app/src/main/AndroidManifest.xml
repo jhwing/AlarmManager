@@ -24,8 +24,13 @@
 
         <receiver android:name=".AlarmNoticeReceiver" />
 
-        <service android:name="jhw.alarm.AlarmService" />
-        <service android:name=".MyAlarmService" />
+        <receiver android:name=".AlarmDemoReceiver">
+
+            <intent-filter>
+                <action android:name="jhw.alarm.action" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
